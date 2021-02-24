@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CLOCK</title>
+	<link rel="icon" type="img/x-icon" href="clock_icon.webp">
+</head>
+<body style="background:  rgb(20, 30, 40);">
+
+	<audio id="clock">
+		<source src="sounds/clock.mp3" type="audio/mp3">
+	</audio>
+
+	<div id="app" style="text-align:center; height: 0px;">
+		<br>
+		<div class="time" style="height: 35px; width: 100px; margin: auto; position: relative; top :50px; right: -250px">
+			<label id="hours">00</label><label>:</label><label id="minutes">00</label>
+		</div>
+		<div  style="margin: auto; position: relative; top :40px; right:80px;">
+			<button onclick="rotate_hour_left()" style="width: 40px; height: 40px; top: -20px; color: rgb(200, 200, 200);font-size: 40px; border-radius: 0px; background-color: rgb(20, 30, 40); border-style: none; right: 170px;">◀️</button>
+			<button onclick="rotate_hour_right()" style="width: 40px; height: 40px; top: -20px; color: rgb(200, 200, 200);font-size: 40px; border-radius: 0px; background-color: rgb(20, 30, 40); border-style: none;  right: -20px;">▶️</button>
+		</div>
+
+		<div  style="margin: auto; position: relative; top :0px; right:80px;">
+			<img src="clock_1.png">	
+			<!-- <img src="1_.png" style="position: relative;top: -430px; right: 60px; margin-left: auto; margin-right: auto;">		 -->
+			<img src="hour_.png" id="hour" style="margin: auto; display: block; position: relative;top: -393px; right: 60px;transform: rotate(0deg);">	
+			<img src="min_.png" id="min" style="margin: auto; display: block; position: relative;top: -780px; right: 60px;transform: rotate(0deg);">	
+		</div>
+
+		<div  style="margin: auto; position: relative; top :-400px; right:80px;">
+			<button onclick="rotate_min_left()" style="width: 40px; height: 40px; top: -355px; color: rgb(200, 200, 200);font-size: 40px; border-radius: 0px; background-color: rgb(20, 30, 40); border-style: none; right: 170px; transform: rotate(-30deg);">🔻</button>
+			<button onclick="rotate_min_right()" style="width: 40px; height: 40px; top: -370px; color: rgb(200, 200, 200);font-size: 40px; border-radius: 0px; background-color: rgb(20, 30, 40); border-style: none;  right: -20px; transform: rotate(30deg);">🔻</button>
+		</div>
+
+		<div style="height: 290px; width: 200px; margin: auto; position: relative; top :-1200px; right: -250px">
+			<img src="questions/2.png" style="width: 50px; height: 50px; position: relative; top: 0px;">
+			<img src="right_wrong.png" style="width: 150px; height: 54px; position: relative; top: -50px;">
+			<p id="questions" style="position: relative; top: -70px; font-size: 24px;">--</p>
+			<button id="calc" onclick="calc()" style="width: 120px; height: 40px; background: green; color: rgb(200, 200, 200); top: -85px;">SUBMIT</button>
+			<button onclick="generateProblem()" style="width: 120px; height: 40px; background: purple; top: -20px; color: rgb(200, 200, 200);"> NEW</button><br>
+			<button id="calc" onclick="sound()" style="width: 60px; height: 60px; background: green; color: rgb(200, 200, 200); top: 30px; font-size: 30px;">📢</button>
+		</div>
+
+		<div style="height: 0px; width: 600px; margin: auto; position: relative; top :-1000px;">
+			<hr>
+			<div style="width: 70px; height: 60px; border: solid; border-radius: 50px; border-color: rgb(0, 170, 255); margin: auto; position: relative; left: 265px; top: 0px;">	
+				<p style="text-align: center;">YSSH</p>
+			</div>
+		</div>
+	</div>
+	<img id="photo" src="right/1.gif" style="display: none;">
+</body>
+
+<style type="text/css">
+	p{
+		color: white;
+		font-style: italic;
+		font-weight: bold;
+		font-size: 20px;
+		text-align: center;
+	}
+	button{
+		border-radius: 60px;
+		border-width: 4px;
+		border-color:rgb(200, 200, 150);
+		margin: auto;
+		position: relative;
+		font-weight: bold;
+		font-size: 20px;
+	}
+	div.time{
+		border-radius: 3px;
+		border-width: 2px;
+		border-style: solid;
+		border-color: rgb(0, 170, 255);
+	}
+	label{
+		color: white;
+		font-style: italic;
+		font-weight: bold;
+		font-size: 30px;
+		position: relative;
+		left: 3px;
+	}
+</style>
+
+<script type="text/javascript">
+	var clk = [0, 0];
+	var res = [0, 0];
+	var Q_NO = 0, Q_R = 0, Q_W = 0;
+	var flag_Q = 0, flag_W = 0;
+	var i_R = 0, i_W = 0, i_S = 0, i_R_W = 0;
+	var i = 0;
+	function generateProblem() {
+		// body...
+		Q_NO++;
+		flag_Q = 1;
+		res[0] = 0;
+		res[1] = 0;
+		document.getElementById("hour").style.transform = 'rotate('+(30*(res[0])).toString()+'deg)';
+		document.getElementById("min").style.transform = 'rotate('+(30*(res[1])).toString()+'deg)';
+		clk[0] = Math.floor(12 * Math.random()+1);
+		clk[1] = Math.floor(12 * Math.random()+1);
+
+		// clk[0] = 8;
+		// clk[1] = 11;
+		
+		if(clk[1] == 12){
+			clk[1] = 0;
+			clk[0]++;
+			if(clk[0] == 13)
+				clk[0] = 1;
+		}
+		document.getElementById("hours").innerHTML = pad(clk[0]);
+		document.getElementById("minutes").innerHTML = pad(clk[1]*5);
+		sound();
+	}
+	function pad(val) {
+	 	var valString = val + "";
+	  	if (valString.length < 2)
+	    	return "0" + valString;
+	  	else
+	    	return valString;
+	}
+	function sound() {
+		// body...
+		document.getElementById("clock").src = "sounds/clock.mp3";
+		var x = document.getElementById("clock");
+		x.playbackRate = 1.25
+		x.play();
+		x.addEventListener('ended', play_question);	
+	}
+	function play_question() {
+		// body...
+		if(!i)
+			if(clk[1] > 7)
+				if(clk[0] == 12)
+					{i++;
+					document.getElementById("clock").src = "sounds/clock/"+1+".mp3";}
+				else
+					document.getElementById("clock").src = "sounds/clock/"+(1+clk[i++]).toString()+".mp3";
+			else
+				document.getElementById("clock").src = "sounds/clock/"+clk[i++]+".mp3";
+			
+		else
+			document.getElementById("clock").src = "sounds/min/"+clk[i++]+".mp3";
+
+		x = document.getElementById("clock");
+		x.playbackRate = 1.25
+		x.play();
+		if (i ==2 | clk[1] == 0){
+			x.removeEventListener('ended', play_question);
+			i = 0;
+			return;
+		}
+		x.addEventListener('ended', play_question);
+		
+
+	}
+	function calc() {
+		// body...
+		if(res[1]>7){
+			res[0]--;
+			if(res[0]==0)
+				res[0] = 12;
+		}
+		if((clk[0]==res[0]) && (clk[1]==res[1])){
+			////////////
+			document.getElementById("clock").src = "sounds/welldone.mp3";
+			var x = document.getElementById("clock");
+			// x.playbackRate = 1.25
+			x.play();
+			////////////
+			if(flag_Q){
+				Q_R++;	flag_Q = 0;
+			}
+			if(flag_W)
+				document.getElementById("photo").src = "right after wrong/"+ ++i_R_W +".gif";
+			else
+				document.getElementById("photo").src = "right/"+ ++i_R +".gif";
+			if(Q_R%5 == 0 & ~flag_W & Q_R!=0){
+				i_R--;
+				document.getElementById("photo").src = "stage/"+ ++i_S +".gif";
+			}
+			flag_W = 0;
+			_window_(0);
+			setTimeout(() => {  _window_(1)}, 3000);			
+		}
+		else{
+			/////////
+			document.getElementById("clock").src = "sounds/try_again.mp3";
+			var x = document.getElementById("clock");
+			x.playbackRate = 1.25
+			x.play();
+			//////////
+			flag_W = 1;
+			document.getElementById("photo").src = "wrong/"+ ++i_W +".gif";
+			_window_(0);
+			setTimeout(() => {  _window_(1)}, 2000);
+			if(flag_Q){
+				Q_W++;	flag_Q = 0;
+			}
+		}
+		reset();
+		res[0] = 0;
+		res[1] = 0;
+		document.getElementById("hour").style.transform = 'rotate('+(30*(res[0])).toString()+'deg)';
+		document.getElementById("min").style.transform = 'rotate('+(30*(res[1])).toString()+'deg)';
+	}
+
+	function _window_(argument) {
+		// body...
+		switch(argument){
+			case 0:
+				document.getElementById("photo").style = "margin: auto; display: block; width: 40%;";
+				document.getElementById("app").style = "display: none";
+			break;
+			case 1:
+				document.getElementById("photo").style = "display: none";
+				document.getElementById("app").style = " text-align:center; height: 0px;display: intial;";
+			break;
+		}
+	}
+	function reset() {
+		// body...
+		if(i_R_W == 5)
+			i_R_W =0;
+		if(i_W == 7)
+			i_W = 0;
+		if(i_R == 14)
+			i_R = 0;
+		if(i_S == 2)
+			i_S = 0;
+	}
+	setInterval(updateMessages, 100);
+	function updateMessages() {
+		// body...
+		document.getElementById("questions").innerHTML = Q_R + " -- " + Q_NO + " -- " + Q_W;
+	}
+
+
+	function rotate_hour_left(){
+		--res[0];
+		if(res[0] <= 0)
+			res[0] += 12;
+		document.getElementById("hour").style.transform = 'rotate('+(30*(res[0])).toString()+'deg)';
+	}
+	function rotate_hour_right(){
+		++res[0];
+		if(res[0] == 13)
+			res[0] = 1;
+		document.getElementById("hour").style.transform = 'rotate('+(30*(res[0])).toString()+'deg)';
+	}
+	function rotate_min_left(){
+		--res[1];
+		if(res[1] == -1)
+			res[1] = 11;
+		document.getElementById("min").style.transform = 'rotate('+(30*(res[1])).toString()+'deg)';
+	}
+	function rotate_min_right(){
+		++res[1];
+		if(res[1] == 12)
+			res[1] = 0;
+		document.getElementById("min").style.transform = 'rotate('+(30*(res[1])).toString()+'deg)';
+	}
+</script>
+</html>
